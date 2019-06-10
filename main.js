@@ -8,6 +8,7 @@ const hbs = require('express-handlebars');
 //const SQL_SELECT_GAME = 'select * from game where name like "%samurai%" ';
 const SQL_SELECT_GAME = 'select * from game where name like ?';
 const SQL_SELECT_GAME_DETAILS = 'select * from game where gid like ?';
+const SQL_SELECT_GAME_COMMENTS = 'select * from comment where gid like ? limit 5';
 
 //const SQL_SELECT_GAME = 'select * from game limit 10';
 
@@ -81,20 +82,37 @@ app.get('/game/:gid', (req, resp) => {
             [ gId ],
             (err, details) => {
             //Release the connection
-                conn.release();
-                console.info(details);
-                console.info(details[1]);
+//                conn.release();
+//                console.info(details);
+//                console.info(details[1]);
                 if (err) {
                     resp.status(500);
                     resp.type('text/plain');
                     resp.send(err);
                     return;
                 }
-                resp.status(200);
-                resp.type('text/html');
-                resp.render('details', { 
-                    gameDetails: details, 
-                    layout: false 
+                conn.query(SQL_SELECT_GAME_COMMENTS,
+                    [ gId ],
+                    (err, comments) => {
+                    //Release the connection
+                        conn.release();
+                        console.info(comments);
+                        console.info(comments[1]);
+                        if (err) {
+                            resp.status(500);
+                            resp.type('text/plain');
+                            resp.send(err);
+                            return;
+                        }
+                        resp.status(200);
+                        resp.type('text/html');
+                        resp.render('details', { 
+                        gameDetails: details, 
+                        gameComments: comments, 
+                        layout: false 
+                    }
+                )
+                
                 });
             }
         )

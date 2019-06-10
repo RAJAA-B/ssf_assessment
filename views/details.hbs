@@ -23,6 +23,23 @@
                             </td>
                         </tr>
                     {{/each}}
+
+
+        <h2>Comments</code> </h2>
+                    {{#each gameComments}}
+                        <div>
+                            User: {{this.user}}
+                        </div>
+                        <br>
+                        <div>
+                            Rating: {{this.rating}}
+                        </div>
+                        <br>
+                        <div>
+                            {{this.c_text}}
+                        </div>
+                    {{/each}}
                 </tbody>
+
 
 </html>
