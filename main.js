@@ -7,6 +7,7 @@ const hbs = require('express-handlebars');
 
 //const SQL_SELECT_GAME = 'select * from game where name like "%samurai%" ';
 const SQL_SELECT_GAME = 'select * from game where name like ?';
+const SQL_SELECT_GAME_DETAILS = 'select * from game where gid like ?';
 
 //const SQL_SELECT_GAME = 'select * from game limit 10';
 
@@ -64,6 +65,44 @@ app.get('/search', (req, resp) => {
     });
 })
 
+app.get('/game/:gid', (req, resp) => {
+    const gId = parseInt(req.params.gid);
+    console.log('gId: ', gId); 
+    //Checkout a connection from the pool
+    pool.getConnection((err, conn) => {
+        if (err) {
+            resp.status(500);
+            resp.type('text/plain');
+            resp.send(err);
+            return;
+        }
+        //Perform our query
+        conn.query(SQL_SELECT_GAME_DETAILS,
+            [ gId ],
+            (err, details) => {
+            //Release the connection
+                conn.release();
+                console.info(details);
+                console.info(details[1]);
+                if (err) {
+                    resp.status(500);
+                    resp.type('text/plain');
+                    resp.send(err);
+                    return;
+                }
+                resp.status(200);
+                resp.type('text/html');
+                resp.render('details', { 
+                    gameDetails: details, 
+                    layout: false 
+                });
+            }
+        )
+    });
+})
+
+
+        
 app.get(/.*/, express.static(__dirname + '/public'))
 
 //start the server, listen on port 3000

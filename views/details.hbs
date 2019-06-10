@@ -7,23 +7,22 @@
         <title>Search</title>
     </head>
     <body>
-       <h1>Games with '<code>{{ q }}</code>' </h1>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
+            
                 <tbody>
-                    {{#each games}}
+                    {{#each gameDetails}}
                         <tr>
                             <td>
-                                <a href="/game/{{this.gid}}">
-                                    {{this.name}}
-                                </a>
+                                Name: {{this.name}}
+                                </br>
+                                Published :{{this.year}}
+                                </br>
+                                Ranking : {{this.ranking}}
+                                </br>
+                                Users Rated : {{this.users_rated}}
+                                </br>
                             </td>
                         </tr>
                     {{/each}}
                 </tbody>
-            </table>
+
 </html>
